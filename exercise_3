@@ -11,19 +11,20 @@ import pandas as pd
 import numpy as np 
 import os
 
-pip install yfinance
 
-import yfinance as yf
 
 def get_data(**kwargs):
-    L = list((input("Enter the companies whose stock prices you'd like to see, separated by a comma.").split(',')))
-    for x in L: 
-        x = x.upper()
-        stock_info = yf.Ticker(x).info
-        market_price = stock_info['regularMarketPrice']
-        previous_close_price = stock_info['regularMarketPreviousClose']
-        print(f'Market price of {x} is: ${market_price}')
-        print(f'Previous close price of {x} was: ${previous_close_price}')
+  api_key = "E3NDSOCIUUOZKDOG"
+  L = list((input("Enter the companies whose stock prices you'd like to see, separated by a comma.").split(',')))
+  for x in L: 
+      x = x.upper()
+      url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + x + '&apikey=' +api_key
+      r = requests.get(url)      
+      data = r.json()
+      path = "D:\Documents\Work\Data_Center\Data_Lake"
+      with open(path +"stock_market_" + "IBM" + str(time.time()), "w") as outfile:
+        json.dump(data, outfile)
+      
   
 default_dag_args = { 'start_date': datetime(2023, 1, 1), 
   'email_on_failure': False, 
@@ -35,5 +36,4 @@ default_dag_args = { 'start_date': datetime(2023, 1, 1),
 
 
 with DAG("market_data_alphavantage_dag", schedule_interval = '@daily', catchup=False, default_args = default_dag_args) as dag_python:
-
-task_0 = PythonOperator(task_id = "get_market_data", python_callable = get_data, op_kwargs = {'tickers' : []})`
+    task_0 = PythonOperator(task_id = "get_market_data", python_callable = get_data, op_kwargs = {'tickers' : []})
