@@ -18,7 +18,7 @@ def get_data(**kwargs):
   L = list((input("Enter the companies whose stock prices you'd like to see, separated by a comma.").split(',')))
   for x in L: 
       x = x.upper()
-      url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + x + '&apikey=' +api_key
+      url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + x + '&apikey=' + api_key
       r = requests.get(url)      
       data = r.json()
       path = "D:\Documents\Work\Data_Center\Data_Lake"
